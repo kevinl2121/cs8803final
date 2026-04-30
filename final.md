@@ -147,7 +147,13 @@ The tool is accessible at [haag_checkin_tool.html](haag_checkin_tool.html) (see 
 
 **Figure 1 — HAAG Check-In Summary Tool**
 
-![HAAG Check-In Summary Tool](haag_checkin_tool.html)
+<img width="723" height="822" alt="image" src="https://github.com/user-attachments/assets/a1e735a1-985f-4188-bcc7-8f55665cb0f8" />
+
+
+<img width="689" height="678" alt="image" src="https://github.com/user-attachments/assets/84edf6a5-b975-451f-8645-72c3f675d5f9" />
+
+
+
 
 *The Check-In Summary Tool input form (top) and its three AI-generated outputs: a ready-to-paste Slack post for `#faculty-relations`, a 3–4 sentence Ops Tracker log entry, and a parsed action items table. The PM fills in raw meeting notes — no formatting required.*
 
@@ -167,7 +173,9 @@ When a PM needs to send a routine async update or a semester welcome message, th
 
 **Figure 2 — AI Outreach Drafter**
 
-![HAAG AI Outreach Drafter](haag_outreach_tool.html)
+<img width="679" height="810" alt="image" src="https://github.com/user-attachments/assets/ae792653-d6c3-490e-8ea2-ff6e73e1a3cb" />
+
+<img width="692" height="617" alt="image" src="https://github.com/user-attachments/assets/3e132130-6d8b-48ee-ad6f-bf832248a90c" />
 
 *The Outreach Drafter showing a monthly async update in progress. The PM selects the message type, fills in status and key updates, and receives an AI-drafted message under 100 words. The prompt sent to the Claude API is shown at the bottom for transparency. The PM reviews before marking as sent.*
 
