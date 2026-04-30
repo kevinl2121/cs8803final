@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAAG AI Outreach Drafter</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem; }
+  .app { background: white; border-radius: 12px; border: 1px solid #e5e5e0; padding: 2rem; max-width: 720px; width: 100%; }
+  .haag-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e5e0; }
+  .haag-logo { width: 36px; height: 36px; background: #003057; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .haag-logo span { color: #B3A369; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+  .haag-title { font-size: 15px; font-weight: 600; color: #1a1a18; }
+  .haag-sub { font-size: 12px; color: #888780; margin-top: 2px; }
+  .tab-row { display: flex; margin-bottom: 1.5rem; border-bottom: 1px solid #e5e5e0; }
+  .tab { padding: 8px 16px; font-size: 13px; color: #888780; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab.active { color: #003057; border-bottom-color: #003057; font-weight: 600; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 12px; color: #888780; font-weight: 600; }
+  input, select, textarea { font-size: 13px; padding: 7px 10px; border-radius: 8px; border: 1px solid #d3d1c7; background: white; color: #1a1a18; width: 100%; font-family: inherit; }
+  textarea { resize: vertical; min-height: 60px; }
+  .msg-type-row, .chan-row { display: flex; gap: 8px; }
+  .msg-type, .chan-btn { flex: 1; padding: 7px 4px; border-radius: 8px; border: 1px solid #e5e5e0; font-size: 12px; cursor: pointer; text-align: center; background: #f5f5f3; color: #888780; font-family: inherit; }
+  .msg-type.selected { background: #E6F1FB; color: #185FA5; border-color: #85B7EB; font-weight: 600; }
+  .chan-btn.sel { background: #E1F5EE; color: #0F6E56; border-color: #5DCAA5; font-weight: 600; }
+  .generate-btn { width: 100%; padding: 11px; background: #003057; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 4px; font-family: inherit; }
+  .generate-btn:hover { background: #002040; }
+  .output-section { margin-top: 1.5rem; border-top: 1px solid #e5e5e0; padding-top: 1.5rem; }
+  .output-label { font-size: 11px; font-weight: 600; color: #888780; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+  .draft-card { background: #f5f5f3; border-radius: 8px; padding: 16px 18px; font-size: 13px; line-height: 1.8; color: #1a1a18; border: 1px solid #e5e5e0; }
+  .greeting { font-weight: 600; }
+  .review-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e5e0; }
+  .review-note { font-size: 12px; color: #888780; display: flex; align-items: center; gap: 6px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #EF9F27; flex-shrink: 0; }
+  .btn-row { display: flex; gap: 8px; }
+  .btn-edit { font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 1px solid #d3d1c7; background: white; color: #1a1a18; cursor: pointer; font-family: inherit; }
+  .btn-send { font-size: 12px; padding: 5px 14px; border-radius: 6px; border: none; background: #003057; color: white; cursor: pointer; font-weight: 600; font-family: inherit; }
+  .log-note { margin-top: 12px; background: #E1F5EE; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #0F6E56; display: flex; gap: 8px; align-items: flex-start; line-height: 1.6; }
+  .prompt-preview { margin-top: 1.25rem; }
+  .prompt-label { font-size: 11px; font-weight: 600; color: #888780; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+  .prompt-box { background: white; border: 1px solid #e5e5e0; border-radius: 8px; padding: 12px 14px; font-size: 12px; color: #888780; font-family: 'SFMono-Regular', Consolas, monospace; line-height: 1.65; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="haag-header">
+    <div class="haag-logo"><span>HAAG</span></div>
+    <div>
+      <div class="haag-title">AI Outreach Drafter</div>
+      <div class="haag-sub">Procedure 2, Step 2 — draft async updates and welcome messages in under 2 minutes</div>
+    </div>
+  </div>
+
+  <div class="tab-row">
+    <div class="tab">Check-in summary</div>
+    <div class="tab active">Outreach drafter</div>
+    <div class="tab">Cadence advisor</div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-group full">
+      <label>Message type</label>
+      <div class="msg-type-row">
+        <button class="msg-type">Welcome message</button>
+        <button class="msg-type selected">Monthly async update</button>
+        <button class="msg-type">Milestone update</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Faculty sponsor</label>
+      <input type="text" value="Dr. Sarah Kim" />
+    </div>
+    <div class="form-group">
+      <label>Project name</label>
+      <input type="text" value="CDDM — 3D Generative Model" />
+    </div>
+    <div class="form-group">
+      <label>PM name</label>
+      <input type="text" value="Jordan M." />
+    </div>
+    <div class="form-group">
+      <label>Project status</label>
+      <select>
+        <option>On track</option>
+        <option>At risk</option>
+        <option>Behind</option>
+      </select>
+    </div>
+    <div class="form-group full">
+      <label>Key update (1–2 sentences)</label>
+      <textarea>Model performance is strong — chamfer distance is within the acceptable threshold. We're on track for the May 1 conference submission.</textarea>
+    </div>
+    <div class="form-group full">
+      <label>Items needing faculty input</label>
+      <textarea style="min-height:46px;">Feedback on the ablation study framing before we finalize the draft.</textarea>
+    </div>
+    <div class="form-group full">
+      <label>Preferred channel</label>
+      <div class="chan-row">
+        <button class="chan-btn sel">Slack</button>
+        <button class="chan-btn">Email</button>
+        <button class="chan-btn">Meeting</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="generate-btn">Draft message ↗</button>
+
+  <div class="output-section">
+    <div class="output-label">AI-drafted message — review before sending</div>
+    <div class="draft-card">
+      <div class="greeting">Hi Dr. Kim,</div>
+      <br>
+      Quick April update on CDDM — things are looking good. The model's chamfer distance is within our target threshold, and we're on pace for the May 1 submission. One thing I'd love your input on: we're finalizing the framing for the ablation study section and would value your feedback before we lock the draft.
+      <br><br>
+      Happy to share the relevant section over Slack whenever works for you.
+      <br><br>
+      <span style="color:#888780;">— Jordan M., HAAG</span>
+    </div>
+
+    <div class="review-bar">
+      <div class="review-note">
+        <div class="dot"></div>
+        PM review required before sending
+      </div>
+      <div class="btn-row">
+        <button class="btn-edit">Edit</button>
+        <button class="btn-send">Mark as sent</button>
+      </div>
+    </div>
+
+    <div class="log-note">
+      ✓&nbsp; Once sent, log the send date in the Operations Tracker under Dr. Kim's faculty entry. No separate documentation required.
+    </div>
+
+    <div class="prompt-preview">
+      <div class="prompt-label">Prompt sent to Claude API</div>
+      <div class="prompt-box">You are a HAAG PM assistant. Draft a monthly async update for faculty sponsor Dr. Sarah Kim on project CDDM — 3D Generative Model. Current status: On Track. Key update: Model performance is strong — chamfer distance is within the acceptable threshold. We're on track for the May 1 conference submission. Items needing faculty input: Feedback on the ablation study framing. Faculty preference: Slack. Keep it under 100 words, professional but warm, and sign off as Jordan M., HAAG.</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

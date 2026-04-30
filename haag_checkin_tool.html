@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAAG Check-In Summary Tool</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem; }
+  .app { background: white; border-radius: 12px; border: 1px solid #e5e5e0; padding: 2rem; max-width: 720px; width: 100%; }
+  .haag-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e5e0; }
+  .haag-logo { width: 36px; height: 36px; background: #003057; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .haag-logo span { color: #B3A369; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+  .haag-title { font-size: 15px; font-weight: 600; color: #1a1a18; }
+  .haag-sub { font-size: 12px; color: #888780; margin-top: 2px; }
+  .tab-row { display: flex; margin-bottom: 1.5rem; border-bottom: 1px solid #e5e5e0; }
+  .tab { padding: 8px 16px; font-size: 13px; color: #888780; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab.active { color: #003057; border-bottom-color: #003057; font-weight: 600; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 12px; color: #888780; font-weight: 600; }
+  input, select, textarea { font-size: 13px; padding: 7px 10px; border-radius: 8px; border: 1px solid #d3d1c7; background: white; color: #1a1a18; width: 100%; font-family: inherit; }
+  textarea { resize: vertical; min-height: 72px; }
+  .status-row { display: flex; gap: 8px; }
+  .status-btn { flex: 1; padding: 7px; border-radius: 8px; border: 1px solid #e5e5e0; font-size: 12px; cursor: pointer; text-align: center; background: #f5f5f3; color: #888780; font-family: inherit; }
+  .status-btn.on-track { background: #EAF3DE; color: #3B6D11; border-color: #97C459; font-weight: 600; }
+  .generate-btn { width: 100%; padding: 11px; background: #003057; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 4px; font-family: inherit; }
+  .generate-btn:hover { background: #002040; }
+  .output-section { margin-top: 1.5rem; border-top: 1px solid #e5e5e0; padding-top: 1.5rem; }
+  .output-label { font-size: 11px; font-weight: 600; color: #888780; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+  .output-card { background: #f5f5f3; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; font-size: 13px; line-height: 1.7; color: #1a1a18; border: 1px solid #e5e5e0; }
+  .channel-tag { display: inline-block; background: #E6F1FB; color: #185FA5; font-size: 11px; padding: 2px 9px; border-radius: 20px; margin-bottom: 8px; font-weight: 600; }
+  .slack-name { color: #003057; font-weight: 600; display: block; margin-bottom: 4px; }
+  .slack-bullet { padding-left: 14px; margin: 3px 0; position: relative; }
+  .slack-bullet::before { content: "•"; position: absolute; left: 0; color: #888780; }
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 6px; }
+  .copy-btn { font-size: 11px; color: #888780; background: none; border: 1px solid #e5e5e0; border-radius: 6px; padding: 3px 10px; cursor: pointer; font-family: inherit; }
+  .action-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .action-table th { text-align: left; padding: 7px 10px; background: #f5f5f3; color: #888780; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 1px solid #e5e5e0; }
+  .action-table td { padding: 8px 10px; border-bottom: 1px solid #e5e5e0; color: #1a1a18; }
+  .action-table tr:last-child td { border-bottom: none; }
+  .badge-due { font-size: 11px; background: #FAEEDA; color: #854F0B; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+  .divider { height: 1px; background: #e5e5e0; margin: 1rem 0; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="haag-header">
+    <div class="haag-logo"><span>HAAG</span></div>
+    <div>
+      <div class="haag-title">Faculty Check-In Summary Tool</div>
+      <div class="haag-sub">Procedure 2, Step 1 — AI-generated Slack post, Ops Tracker entry, and action items</div>
+    </div>
+  </div>
+
+  <div class="tab-row">
+    <div class="tab active">Check-in summary</div>
+    <div class="tab">Outreach drafter</div>
+    <div class="tab">Cadence advisor</div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Faculty sponsor</label>
+      <input type="text" value="Dr. Sarah Kim" />
+    </div>
+    <div class="form-group">
+      <label>Project name</label>
+      <input type="text" value="CDDM — 3D Generative Model" />
+    </div>
+    <div class="form-group">
+      <label>PM / Team lead</label>
+      <input type="text" value="Jordan M." />
+    </div>
+    <div class="form-group">
+      <label>Meeting date</label>
+      <input type="text" value="April 22, 2026" />
+    </div>
+    <div class="form-group full">
+      <label>Current milestone</label>
+      <input type="text" value="Final paper draft — submit to CVPR workshop by May 1" />
+    </div>
+    <div class="form-group full">
+      <label>Project status</label>
+      <div class="status-row">
+        <button class="status-btn on-track">On track</button>
+        <button class="status-btn">At risk</button>
+        <button class="status-btn">Behind</button>
+      </div>
+    </div>
+    <div class="form-group full">
+      <label>Raw meeting notes</label>
+      <textarea>Dr. Kim happy with model performance improvements. Chamfer distance now within acceptable range. Concerned about timeline — wants draft by Apr 28. Asked us to add ablation study. Preferred follow-up via Slack.</textarea>
+    </div>
+    <div class="form-group full">
+      <label>Action items (item | owner | due date)</label>
+      <textarea style="min-height:52px">Complete ablation study section | Riya S. | Apr 26
+Send full draft for review | Jordan M. | Apr 28</textarea>
+    </div>
+  </div>
+
+  <button class="generate-btn">Generate outputs ↗</button>
+
+  <div class="output-section">
+    <div class="output-label">Output 1 — Slack post</div>
+    <div class="output-card">
+      <div class="channel-tag">#faculty-relations</div>
+      <span class="slack-name">HAAG Check-In — CDDM — April 2026</span>
+      <div class="slack-bullet">Chamfer distance within acceptable threshold — model performance confirmed on track for submission</div>
+      <div class="slack-bullet">Dr. Kim requests full draft by Apr 28; ablation study section to be added before then</div>
+      <div class="slack-bullet">Follow-up preferred async via Slack</div>
+      <div style="margin-top:10px; font-size:12px; color:#888780;">— Jordan M., HAAG</div>
+    </div>
+    <div class="copy-row"><button class="copy-btn">Copy</button></div>
+
+    <div class="divider"></div>
+    <div class="output-label">Output 2 — Ops tracker log entry</div>
+    <div class="output-card">
+      Check-in held with Dr. Sarah Kim on April 22. Faculty expressed satisfaction with model performance; chamfer distance is within publishable range. Key concern raised: paper draft must be delivered by April 28 to maintain submission timeline. Faculty preference for async Slack follow-up confirmed. Next step is ablation study completion by April 26.
+    </div>
+    <div class="copy-row"><button class="copy-btn">Copy</button></div>
+
+    <div class="divider"></div>
+    <div class="output-label">Output 3 — Action items</div>
+    <div class="output-card" style="padding: 0; overflow: hidden;">
+      <table class="action-table">
+        <tr><th>Action item</th><th>Owner</th><th>Due</th></tr>
+        <tr><td>Complete ablation study section</td><td>Riya S.</td><td><span class="badge-due">Apr 26</span></td></tr>
+        <tr><td>Send full draft for faculty review</td><td>Jordan M.</td><td><span class="badge-due">Apr 28</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>
